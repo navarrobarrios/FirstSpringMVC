@@ -1,7 +1,9 @@
 package com.example.anavarropc.beans;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,6 +18,7 @@ public class User {
     @GenericGenerator(name="increment", strategy = "increment")
     @JsonIgnore
     private Integer id;
+    @PrimaryKeyJoinColumn
     @Column(name = "username")
     private String username;
     @Column(name = "password")
@@ -49,6 +52,9 @@ public class User {
         this.name = resultSet.getString("name");
         this.lastname = resultSet.getString("lastname");
         this.age = resultSet.getInt("user_age");
+    }
+
+    public User(JSONPObject o) {
     }
 
     //endregion

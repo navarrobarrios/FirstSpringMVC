@@ -1,6 +1,7 @@
 package com.example.anavarropc.controllers;
 
-import com.example.anavarropc.beans.*;
+import com.example.anavarropc.beans.ErrorCodesAplication;
+import com.example.anavarropc.beans.User;
 import com.example.anavarropc.interfaces.IUserService;
 import com.example.anavarropc.responses_entities.ErrorResponse;
 import com.example.anavarropc.responses_entities.GeneralResponse;
@@ -16,34 +17,46 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.persistence.PersistenceException;
+import java.util.List;
 
 @RestController
-public class LoginController extends ResponseEntityExceptionHandler {
+public class UserController extends ResponseEntityExceptionHandler {
 
     //region Variables
     @Autowired
     private IUserService userService;
     //endregion
-
-    @RequestMapping("api/login/requestLogin")
+    @RequestMapping("api/user/getUser")
     @ResponseBody
-    public ResponseEntity<GeneralResponse> getUser(@RequestParam("username") String username, @RequestParam("password") String password){
+    public ResponseEntity<GeneralResponse> getUser(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @RequestParam("username_request") String usernameRequest){
+
         GeneralResponse userResponse = new GeneralResponse();
-        User user_by_id = userService.getUserByUsername(username);
+        User user_by_id = userService.getUserByUsername(usernameRequest);
         if(user_by_id != null){
-            if(user_by_id.getPassword().equals(password)){
-                userResponse.setSuccess(true);
-                userResponse.setResult(new LoginEntity(user_by_id.getName(), user_by_id.getLastname()));
-                return new ResponseEntity<>(userResponse, HttpStatus.OK);
-            }else{
-                userResponse.setSuccess(false);
-                userResponse.setResult(new ErrorResponse(ErrorCodesAplication.ERROR_002));
-                return new ResponseEntity<>(userResponse, HttpStatus.OK);
-            }
+            userResponse.setSuccess(true);
+            userResponse.setResult(user_by_id);
+            return new ResponseEntity<>(userResponse, HttpStatus.OK);
         }else{
             userResponse.setSuccess(false);
             userResponse.setResult(new ErrorResponse(ErrorCodesAplication.ERROR_001));
             return new ResponseEntity<>(userResponse, HttpStatus.OK); }
+
+    }
+
+    @RequestMapping("api/user/getUsers")
+    @ResponseBody
+    public ResponseEntity<GeneralResponse> getUsers(
+            @RequestParam("username") String username,
+            @RequestParam("password") String password){
+
+        GeneralResponse userResponse = new GeneralResponse();
+        List<User> users = userService.getAllUsers();
+        userResponse.setSuccess(true);
+        userResponse.setResult(users);
+        return new ResponseEntity<>(userResponse, HttpStatus.OK);
     }
 
     //region Error Handler
@@ -75,4 +88,5 @@ public class LoginController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>((Object)userResponse, HttpStatus.OK);
     }
     //endregion
+
 }

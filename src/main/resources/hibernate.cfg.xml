@@ -8,9 +8,9 @@
 
         <!-- JDBC Database connection settings -->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:8080/hb_student_tracker?useSSL=false</property>
+        <property name="connection.url">jdbc:mysql://localhost/practice_table</property>
         <property name="connection.username">root</property>
-        <property name="connection.password"></property>
+        <property name="connection.password"/>
 
         <!-- JDBC connection pool settings ... using built-in test pool -->
         <property name="connection.pool_size">1</property>
@@ -23,6 +23,8 @@
 
         <!-- Set the current session context -->
         <property name="current_session_context_class">thread</property>
+
+        <mapping class="com.example.anavarropc.beans.User"/>
 
     </session-factory>
 
